@@ -13,7 +13,7 @@ resource "azurerm_virtual_network" "mediawiki-vnet" {
     name                = "mediawikiVnet"
     address_space       = ["10.0.0.0/16"]
     location            = "eastus"
-    resource_group_name = azurerm_resource_group.mediawikiResGrp.name
+    resource_group_name = azurerm_resource_group.mediawiki-rg.name
 
     tags = {
         environment = "TW assignment"
@@ -23,8 +23,8 @@ resource "azurerm_virtual_network" "mediawiki-vnet" {
 # Subnet Creation
 resource "azurerm_subnet" "mediawiki-subnet" {
     name                    = "mediawikiSubnet"
-    resource_group_name     = azurerm_resource_group.mediawikiResGrp.name
-    virtual_network_name    = azurerm_virtual_network.mediawikiVnet.name
+    resource_group_name     = azurerm_resource_group.mediawiki-rg.name
+    virtual_network_name    = azurerm_virtual_network.mediawiki-vnet.name
     address_prefixes        = ["10.0.1.0/24"]
 }
 
@@ -32,15 +32,15 @@ resource "azurerm_subnet" "mediawiki-subnet" {
 resource "azurerm_public_ip" "mediawiki-public-ip" {
     name                    = "mediawikiPublicIP"
     location                = "eastus"
-    resource_group_name     = azurerm_resource_group.mediawikiResGrp.name
+    resource_group_name     = azurerm_resource_group.mediawiki-rg.name
     allocation_method       = "Dynamic"    
 }
 
 # NSG Creation
 resource "azurerm_network_security_group" "mediawiki-nsg" {
-    name            = "mediawikiNSG"
-    location        = "eastus"
-    resource_group_name     = azurerm_resource_group.mediawikiResGrp.name
+    name                    = "mediawikiNSG"
+    location                = "eastus"
+    resource_group_name     = azurerm_resource_group.mediawiki-rg.name
     
     security_rule {
         name                       = "SSH"
@@ -59,48 +59,48 @@ resource "azurerm_network_security_group" "mediawiki-nsg" {
 resource "azurerm_network_interface" "mediawiki-nic" {
     name                    = "mediawikiNIC"
     location                = "eastus"
-    resource_group_name     = azurerm_resource_group.mediawikiResGrp.name
+    resource_group_name     = azurerm_resource_group.mediawiki-rg.name
     
     ip_configuration {
         name                            = "mediawikiNICConfig"
-        subnet_id                       = azurerm_subnet.mediawikiSubnet.id
+        subnet_id                       = azurerm_subnet.mediawiki-subnet.id
         private_ip_address_allocation   = "Dynamic"
-        public_ip_address_id            = azurerm_public_ip.mediawikiPublicIP.id
+        public_ip_address_id            = azurerm_public_ip.mediawiki-public-ip.id
     }
 }
 
 # Apply NSG to NIC
 resource "azurerm_network_interface_security_group_association" "mediawiki-association" {
-    network_interface_id = azurerm_network_interface.mediawikiNIC.id
-    azurerm_network_security_group_id   = azurerm_network_security_group.mediawikiNSG.id
+    network_interface_id = azurerm_network_interface.mediawiki-nic.id
+    network_security_group_id   = azurerm_network_security_group.mediawiki-nsg.id
 }
 
 # Storage Account creation
 resource "azurerm_storage_account" "mediawiki-storage-account" {
-    name = var.storage_account_name
-    resource_group_name         = azurerm_resource_group.mediawikiResGrp.name
+    name                        = var.storage_account_name
+    resource_group_name         = azurerm_resource_group.mediawiki-rg.name
     location                    = "eastus"
     account_tier                = "Standard"
     account_replication_type    = "LRS"
 }
 
-# Login Key creation
-resource "tls_private_key" "mediawiki-key" {
-  algorithm = "RSA"
-  rsa_bits = 4096
-}
-output "tls_private_key" { 
-    value = tls_private_key.mediawiki-key.private_key_pem 
-    sensitive = true
-}
+# # Login Key creation
+# resource "tls_private_key" "mediawiki-key" {
+#   algorithm = "RSA"
+#   rsa_bits = 4096
+# }
+# output "tls_private_key" { 
+#     value = tls_private_key.mediawiki-key.private_key_pem 
+#     sensitive = true
+# }
 
 # VM creation 
 resource "azurerm_linux_virtual_machine" "mediawiki-vm" {
     name                = "mediawikiVM"
     location            = "eastus"
-    resource_group_name = azurerm_resource_group.mediawikiResGrp.name
+    resource_group_name = azurerm_resource_group.mediawiki-rg.name
     network_interface_ids   = [
-        azurerm_network_interface.mediawikiNIC.id
+        azurerm_network_interface.mediawiki-nic.id
     ]
     size                = "Standard_DS1_v2"
 
@@ -119,10 +119,6 @@ resource "azurerm_linux_virtual_machine" "mediawiki-vm" {
 
     computer_name  = "mediawikiVM"
     admin_username = "akshar"
-    disable_password_authentication = true
-
-    admin_ssh_key {
-        username       = "akshar"
-        public_key     = tls_private_key.mediawiki-key.public_key_openssh
-    }
+    admin_password = "Welcome@123"
+    disable_password_authentication = false
 }

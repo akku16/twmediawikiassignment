@@ -1,0 +1,23 @@
+trigger: none
+
+
+stages:
+  - stage: storage_account_creation
+    displayName: Create Terraform backend
+    dependsOn: []
+    jobs:
+      - job: create_storage_account
+        displayName: Create terraform backend
+        variables:
+          - group: mediawiki-tw
+        steps:
+          - task: ShellScript@2
+            inputs:
+              scriptPath: ../scripts/az_cli_login.sh
+              args: $(azpasssord)
+              failOnStandardError: true
+
+          - task: ShellScript@2
+            inputs:
+              scriptPath: ../scripts/setup_storage_account.sh
+              failOnStandardError: true
