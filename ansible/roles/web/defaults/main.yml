@@ -1,0 +1,8 @@
+packages_web:
+    - httpd 
+    - php 
+    - php-mysql 
+    - php-gd 
+    - php-xml 
+    - mariadb 
+    - php-mbstring

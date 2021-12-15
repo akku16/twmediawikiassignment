@@ -1,0 +1,7 @@
+---
+- name: Mediawiki web deploy
+  hosts: web_hosts
+  become: true
+  gather_facts: false
+  roles:
+    - web

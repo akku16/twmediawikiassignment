@@ -3,4 +3,4 @@
 USERNAME=beingakshar@outlook.com
 PASSWORD=$2
 
-az login -u <username> -p <password>
+az login -u $USERNAME -p $PASSWORD

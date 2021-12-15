@@ -1,8 +1,8 @@
 terraform {
     backend "azurerm" {
-        resource_group_name  = var.resource_group
-        storage_account_name = var.storage_account_name
-        container_name       = var.container_name
-        key                  = var.key      
+        resource_group_name  = "mediawiki-storage-account-rg"
+        storage_account_name = "aksss1234572"
+        container_name       = "terraform"
+        key                  = "230DmiyIla17tAr8Qijaf489DtYKWJ5bl817567HRbq8JZXer9sRFR8aLUU+hDETo2B/GSyWvPt1gm0P0T4Tdw=="      
     }
 }
