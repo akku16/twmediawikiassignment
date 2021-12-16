@@ -83,5 +83,6 @@ export TF_VAR_vm_user_password="<password>" #Used to login into the AzureVMs
   OR
   * Presently I have a NSG rule for allowing SSH on 22 from * on DB VM. Hardcode the my local machine's IP in the source
 - I wanted to orchestrate the entire deployment using azure pipelines (YAML based) but got `No hosted parallelism has been purchased or granted` error cause of a free teir account   so maybe create a self hosted build agent using terraform and use that to deploy the code
+- Run the ansible roles (DB and WEB) parallely 
 - I have currently stored the login password for the VMs as an ENV variable and used it in Terraform but would like to store these in Azure KV and fetch them when the need arises
   
