@@ -56,7 +56,7 @@ export TF_VAR_vm_user_password="<password>" #Used to login into the AzureVMs
 - Ensure the points in prerequisite section are met
 - Take a clone of the repo
 - Change directory to `cd twmediawikiassignment`
-- Run the master deploy script `./deploy.sh <operation>
+- Run the master deploy script `./deploy.sh [operation]
   
   The list of the operations supported are as follows -
   ```
