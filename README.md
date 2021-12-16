@@ -70,7 +70,7 @@ export TF_VAR_vm_user_password="<password>" #Used to login into the AzureVMs
       destroy -> Destroy all terraform resources
       keydist -> Distrubute keys to VMs
   ```
-
+  
 ## Things left
 - The need to automatically delete the resource group for the storage account, storage account and conatiner (Manual job as of now)
 - Optimize terraform code for duplicatoin. Implement looping over variables to create resources
