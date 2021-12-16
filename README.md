@@ -1,7 +1,7 @@
 # twmediawikiassignment
 
 ## Introduction
-This is a working code to deploy to Mediawiki on Azure using a combination of Terraform, Ansible and shell scripts
+This is a working code to deploy Mediawiki on Azure using a combination of Terraform, Ansible and shell scripts
 
 ## Components
 - Terraform
