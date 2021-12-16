@@ -13,6 +13,20 @@ variable "region" {
   default = "eastus"
 }
 
+variable "vm_user" {
+  type = string 
+  description = "Picked from ENV variables. Define then as TF_VAR_vm_user"
+}
+
+variable "vm_user_password" {
+  type = string
+  description = "Picked from ENV variables. Define then as TF_VAR_vm_user_password"
+}
+
+variable "USER" {
+  type  = string
+  description = "Picked from ENV variables. Define then as TF_VAR_USER"
+}
 
 # variable "mediawiki_subnet_var" {
 #   type = list

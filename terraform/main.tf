@@ -166,8 +166,8 @@ resource "azurerm_linux_virtual_machine" "mediawiki-vm-web" {
     ]
     size                = "Standard_DS1_v2"
     computer_name       = "mediawikiVMWeb"
-    admin_username      = "akshar"
-    admin_password      = "Welcome@123"
+    admin_username      = var.vm_user
+    admin_password      = var.vm_user_password
     disable_password_authentication = false
 
     os_disk {
@@ -211,8 +211,8 @@ resource "azurerm_linux_virtual_machine" "mediawiki-vm-db" {
     }
 
     computer_name  = "mediawikiVMDb"
-    admin_username = "akshar"
-    admin_password = "Welcome@123"
+    admin_username = var.vm_user
+    admin_password = var.vm_user_password
     disable_password_authentication = false
 
     tags = {
