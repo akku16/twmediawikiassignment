@@ -34,7 +34,7 @@ if [[ $operation == "deploy" ]];then
   # Create storage account of maintaing the backend of terraform
   cd $SCRIPTS_PATH && ./setup_storage_account.sh && cd -
   # Provision Infrastructure
-  cd $TERRAFORM_PATH && terraform init && terraform apply && cd -
+  cd $TERRAFORM_PATH && terraform init && terraform apply -auto-approve && cd -
   # Generate public-private keys for ansible
   cd $SCRIPTS_PATH && ./generate_keys.sh && cd -
   echo "===> Distrubute public keys to VMs"
@@ -46,7 +46,7 @@ if [[ $operation == "deploy" ]];then
   done <../ansible/mediawiki_inventory.ini
   cd -
   # Step 5 -> Configure using ansible
-    if [[ -z $tag ]];then
+  if [[ -z $tag ]];then
     args=""
   else
     args="--tags $tag"

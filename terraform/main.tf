@@ -1,19 +1,15 @@
 # Resource Group Creation
 resource "azurerm_resource_group" "mediawiki-rg" {
-    name        = "mediawikiResGrp"
-    location    = "eastus"
+    name        = var.resource_group
+    location    = var.region
 }
 
 # VNet Creation
 resource "azurerm_virtual_network" "mediawiki-vnet" {
     name                = "mediawikiVnet"
     address_space       = ["10.0.0.0/16"]
-    location            = "eastus"
+    location            = var.region
     resource_group_name = azurerm_resource_group.mediawiki-rg.name
-
-    tags = {
-        environment = "TW assignment"
-    }
 }
 
 # Subnet Creation
@@ -33,14 +29,14 @@ resource "azurerm_subnet" "mediawiki-subnet-db" {
 # Public IPs creation
 resource "azurerm_public_ip" "mediawiki-public-ip-web" {
     name                    = "mediawikiPublicIPWeb"
-    location                = "eastus"
+    location                = var.region
     resource_group_name     = azurerm_resource_group.mediawiki-rg.name
     allocation_method       = "Dynamic"    
 }
 
 resource "azurerm_public_ip" "mediawiki-public-ip-db" {
     name                    = "mediawikiPublicIPDb"
-    location                = "eastus"
+    location                = var.region
     resource_group_name     = azurerm_resource_group.mediawiki-rg.name
     allocation_method       = "Dynamic"    
 }
@@ -48,13 +44,13 @@ resource "azurerm_public_ip" "mediawiki-public-ip-db" {
 # NSG Creation
 resource "azurerm_network_security_group" "mediawiki-nsg-web" {
     name                    = "mediawikiNSGWeb"
-    location                = "eastus"
+    location                = var.region
     resource_group_name     = azurerm_resource_group.mediawiki-rg.name
 }
 
 resource "azurerm_network_security_group" "mediawiki-nsg-db" {
     name                    = "mediawikiNSGDb"
-    location                = "eastus"
+    location                = var.region
     resource_group_name     = azurerm_resource_group.mediawiki-rg.name
 }  
 
@@ -125,7 +121,7 @@ resource "azurerm_network_security_rule" security_rule2_db {
 # NIC creation
 resource "azurerm_network_interface" "mediawiki-nic-web" {
     name                    = "mediawikiNICWeb"
-    location                = "eastus"
+    location                = var.region
     resource_group_name     = azurerm_resource_group.mediawiki-rg.name
     
     ip_configuration {
@@ -138,7 +134,7 @@ resource "azurerm_network_interface" "mediawiki-nic-web" {
 
 resource "azurerm_network_interface" "mediawiki-nic-db" {
     name                    = "mediawikiNICDb"
-    location                = "eastus"
+    location                = var.region
     resource_group_name     = azurerm_resource_group.mediawiki-rg.name
     
     ip_configuration {
@@ -160,15 +156,10 @@ resource "azurerm_network_interface_security_group_association" "mediawiki-assoc
     network_security_group_id   = azurerm_network_security_group.mediawiki-nsg-db.id
 }
 
-resource "tls_private_key" "mediawiki-key" {
-  algorithm = "RSA"
-  rsa_bits  = 2048
-}
-
 # VM creation 
 resource "azurerm_linux_virtual_machine" "mediawiki-vm-web" {
     name                = "mediawikiVMWeb"
-    location            = "eastus"
+    location            = var.region
     resource_group_name = azurerm_resource_group.mediawiki-rg.name
     network_interface_ids   = [
         azurerm_network_interface.mediawiki-nic-web.id
@@ -199,7 +190,7 @@ resource "azurerm_linux_virtual_machine" "mediawiki-vm-web" {
 
 resource "azurerm_linux_virtual_machine" "mediawiki-vm-db" {
     name                = "mediawikiVMDb"
-    location            = "eastus"
+    location            = var.region
     resource_group_name = azurerm_resource_group.mediawiki-rg.name
     network_interface_ids   = [
         azurerm_network_interface.mediawiki-nic-db.id

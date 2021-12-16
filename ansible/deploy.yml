@@ -15,7 +15,6 @@
   hosts: db_hosts
   become: true
   remote_user: akshar
-  gather_facts: false
   roles:
     - db
   tags:

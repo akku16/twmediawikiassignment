@@ -3,6 +3,17 @@ variable "storage_account_name" {
   default = "mediawikisa"
   }
 
+variable "resource_group" {
+  type  = string
+  default = "mediawikiResGrp"
+}
+
+variable "region" {
+  type  = string
+  default = "eastus"
+}
+
+
 # variable "mediawiki_subnet_var" {
 #   type = list
 #   default = [
@@ -21,7 +32,7 @@ variable "storage_account_name" {
 #    ]
 # }
 
-variable "media_wiki_components" {
-  type = list
-  default = ["web", "db"]
-}
+# variable "media_wiki_components" {
+#   type = list
+#   default = ["web", "db"]
+# }

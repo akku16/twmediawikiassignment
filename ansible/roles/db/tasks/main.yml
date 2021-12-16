@@ -14,17 +14,39 @@
     name: pymysql
     state: present
 
+- name: Find the private ip for db config change
+  set_fact:
+    db_private_ip: "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}"
+
+- name: Print private ip
+  debug:
+    msg: "{{ db_private_ip }}"
+- name: Set the bind port to private ip
+  shell: |
+    sed -i "s/127.0.0.1/{{ PRIVATE_IP }}/g" {{ CONFIG_FILE }}
+  vars:
+    PRIVATE_IP: "{{ db_private_ip }}"
+    CONFIG_FILE: "{{ mysql_config_file }}"
+
+- name: restart msql service
+  systemd: name=mysql state=restarted
+
 - name: Create database user
   shell: |
-    sudo mysql -u root -e "CREATE USER 'new_mysql_user1' IDENTIFIED BY 'testpassword'"
-  register: output
+    sudo mysql -u root -e "CREATE USER {{ USER }} IDENTIFIED BY {{ PASSWORD }}"
+  vars:
+    USER: "{{ db_user }}"
+    PASSWORD: "{{ db_user_passowrd }}"
 
-- debug:
-    msg: "{{ output }}"
 - name: Create database
   shell: |
-    sudo mysql -u root -e "CREATE DATABASE my_wiki1"
+    sudo mysql -u root -e "CREATE DATABASE {{ DB_NAME }}"
+  vars:
+    DB_NAME: "{{ db_name }}"
 
 - name: Create new user for new database
   shell: |
-    sudo mysql -u root -e "GRANT ALL ON my_wiki1.* TO 'new_mysql_user1'"
+    sudo mysql -u root -e "GRANT ALL ON {{ DB_NAME }}.* TO {{ USER }}"
+  vars:
+    DB_NAME: "{{ db_name }}"
+    USER: "{{ db_user }}"

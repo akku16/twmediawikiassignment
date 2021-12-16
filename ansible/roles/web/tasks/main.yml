@@ -14,7 +14,7 @@
 
 - name: Download the MediaWiki Binary
   get_url: 
-     url: 'https://releases.wikimedia.org/mediawiki/1.31/mediawiki-1.31.1.tar.gz'
+     url: "{{ mediawiki_src_url }}"
      dest: '/tmp/mediawiki-1.31.1.tar.gz'
      mode: 0644
 
@@ -31,7 +31,7 @@
    state: link
 
 - name: Change ownership
-  command: chown -R akshar:akshar /var/www/html/mediawiki
+  command: chown -R root:root /var/www/html/mediawiki
 
 - name: restart web service
   systemd: name=apache2 state=restarted

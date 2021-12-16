@@ -1,3 +1,5 @@
+mediawiki_src_url: "https://releases.wikimedia.org/mediawiki/1.31/mediawiki-1.31.1.tar.gz"
+
 packages_web:
     - php 
     - php-mysql 
