@@ -1,35 +1,37 @@
 - name: Update packages  
   apt:
-    upgrade: yes
-    update_cache: yes
+    upgrade: 'True'
+    update_cache: 'True'
 
 - name: Install required packages
-  yum:
-    name: "{{ packages_web }}"
+  apt:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ packages_web }}"
 
-- name: start the web server
-  systemd: state=started name=httpd enabled=true
+- name: start web service
+  systemd: state=started name=apache2 enabled=true
 
 - name: Download the MediaWiki Binary
   get_url: 
-     url: 'https://releases.wikimedia.org/mediawiki/1.37/mediawiki-1.37.0.tar.gz'
-     dest: '/tmp/mediawiki-1.37.0.tar.gz'
+     url: 'https://releases.wikimedia.org/mediawiki/1.31/mediawiki-1.31.1.tar.gz'
+     dest: '/tmp/mediawiki-1.31.1.tar.gz'
      mode: 0644
 
 - name: Extract the tar
   unarchive:
-    src: /tmp/mediawiki-1.37.0.tar.gz
-    dest: /var/www
+    src: /tmp/mediawiki-1.31.1.tar.gz
+    dest: /var/lib
     remote_src: yes
 
-- name: create a symlink
+- name: Create a symlink for mediawiki
   file: 
-   src: '/var/www/mediawiki-1.37.0/'
-   dest: '/var/www/mediawiki'
+   src: '/var/lib/mediawiki-1.31.1/'
+   dest: '/var/www/html/mediawiki'
    state: link
 
-- name: set permissions for apache
-  command: chown -R apache:apache /var/www/mediawiki
+- name: Change ownership
+  command: chown -R akshar:akshar /var/www/html/mediawiki
 
-- name: restart httpd service
-  systemd: name=httpd state=restarted
+- name: restart web service
+  systemd: name=apache2 state=restarted

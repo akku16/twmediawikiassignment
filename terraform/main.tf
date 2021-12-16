@@ -99,11 +99,27 @@ resource "azurerm_network_security_rule" security_rule2 {
         access                      = "Allow"
         protocol                    = "Tcp"
         source_port_range           = "*"
-        destination_port_range      = "8080"
+        destination_port_range      = "80"
         source_address_prefix       = "*"
         destination_address_prefix  = "*" 
         resource_group_name         = azurerm_resource_group.mediawiki-rg.name
         network_security_group_name = azurerm_network_security_group.mediawiki-nsg-web.name
+}
+
+resource "azurerm_network_security_rule" security_rule2_db {
+
+        depends_on                 = [azurerm_network_security_group.mediawiki-nsg-db]
+        name                       = "dbacess"
+        priority                   = 1010
+        direction                  = "Inbound"
+        access                     = "Allow"
+        protocol                   = "Tcp"
+        source_port_range          = "*"
+        destination_port_range     = "3306"
+        source_address_prefix      = "10.0.1.0/24"
+        destination_address_prefix = "10.0.2.0/24" 
+        resource_group_name         = azurerm_resource_group.mediawiki-rg.name
+        network_security_group_name = azurerm_network_security_group.mediawiki-nsg-db.name
 }
 
 # NIC creation
@@ -144,6 +160,11 @@ resource "azurerm_network_interface_security_group_association" "mediawiki-assoc
     network_security_group_id   = azurerm_network_security_group.mediawiki-nsg-db.id
 }
 
+resource "tls_private_key" "mediawiki-key" {
+  algorithm = "RSA"
+  rsa_bits  = 2048
+}
+
 # VM creation 
 resource "azurerm_linux_virtual_machine" "mediawiki-vm-web" {
     name                = "mediawikiVMWeb"
@@ -153,6 +174,10 @@ resource "azurerm_linux_virtual_machine" "mediawiki-vm-web" {
         azurerm_network_interface.mediawiki-nic-web.id
     ]
     size                = "Standard_DS1_v2"
+    computer_name       = "mediawikiVMWeb"
+    admin_username      = "akshar"
+    admin_password      = "Welcome@123"
+    disable_password_authentication = false
 
     os_disk {
         name                    = "mediawikiDiskWeb"
@@ -166,11 +191,6 @@ resource "azurerm_linux_virtual_machine" "mediawiki-vm-web" {
         sku       = "18.04-LTS"
         version   = "latest"
     }
-
-    computer_name  = "mediawikiVMWeb"
-    admin_username = "akshar"
-    admin_password = "Welcome@123"
-    disable_password_authentication = false
 
     tags = {
         type = "web"

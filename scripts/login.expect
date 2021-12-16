@@ -1,0 +1,8 @@
+#!/usr/bin/expect -f
+
+spawn ssh-copy-id -o "StrictHostKeyChecking no" $argv
+expect "password:"
+send "Welcome@123\n"
+expect eof
+
+

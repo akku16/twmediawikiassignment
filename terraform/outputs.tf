@@ -9,3 +9,8 @@
 # output "aks" {
 #     value = "awesome"
 # }
+
+output "pem" {
+        value = [tls_private_key.mediawiki-key.private_key_pem]
+        sensitive = true
+}

@@ -2,6 +2,23 @@
 - name: Mediawiki web deploy
   hosts: web_hosts
   become: true
+  remote_user: akshar
   gather_facts: false
   roles:
     - web
+  tags:
+    - web
+  vars:
+     ansible_ssh_private_key_file: "~/.ssh/id_rsa"
+
+- name: Mediawiki database deploy
+  hosts: db_hosts
+  become: true
+  remote_user: akshar
+  gather_facts: false
+  roles:
+    - db
+  tags:
+    - db
+  vars:
+     ansible_ssh_private_key_file: "~/.ssh/id_rsa"

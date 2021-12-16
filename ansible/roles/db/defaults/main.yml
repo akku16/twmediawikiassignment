@@ -1,1 +1,9 @@
-db_name: wikidatabase
+packages_db:
+    - php 
+    - php-mysql 
+    - php-xml 
+    - php-mbstring
+    - mysql-server
+    - libapache2-mod-php
+    - python3
+    - python3-pip
