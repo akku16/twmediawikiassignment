@@ -24,6 +24,7 @@ export ARM_CLIENT_SECRET="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 export TF_VAR_vm_user="<username" #Used to create the admin user for the AzureVMs
 export TF_VAR_vm_user_password="<password>" #Used to login into the AzureVMs
 ```  
+Run `. ~/.bashrc` to reload your profile file in the running shell.
 
 ## Implementation
 - Shell Scripts
