@@ -17,10 +17,18 @@ This is a working code to deploy Mediawiki on Azure using a combination of Terra
 - Ansible installed
 2. The following variables exported in the environment
 ```
+# For Azure CLI usage
 export ARM_SUBSCRIPTION_ID="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 export ARM_TENANT_ID="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 export ARM_CLIENT_ID="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 export ARM_CLIENT_SECRET="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+
+# For Terraform usage
+export TF_VAR_SUBSCRIPTION_ID="xxxxxxxxxxxxxxxxxxxxxxxxxxx"
+export TF_VAR_TENANT_ID="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+export TF_VAR_CLIENT_ID="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+export TF_VAR_CLIENT_SECRET="xxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+
 export TF_VAR_vm_user="<username" #Used to create the admin user for the AzureVMs
 export TF_VAR_vm_user_password="<password>" #Used to login into the AzureVMs
 ```  
