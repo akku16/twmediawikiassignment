@@ -23,6 +23,23 @@ variable "vm_user_password" {
   description = "Picked from ENV variables. Define then as TF_VAR_vm_user_password"
 }
 
+variable "SUBSCRIPTION_ID" {
+  type = string
+}
+
+variable "TENANT_ID" {
+  type = string
+}
+
+variable "CLIENT_ID" {
+  type = string
+}
+
+variable "CLIENT_SECRET" {
+  type = string
+}
+
+
 # variable "mediawiki_subnet_var" {
 #   type = list
 #   default = [
