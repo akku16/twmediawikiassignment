@@ -22,7 +22,6 @@ export ARM_TENANT_ID="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 export ARM_CLIENT_ID="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 export ARM_CLIENT_SECRET="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 export TF_VAR_vm_user="<username" #Used to create the admin user for the AzureVMs
-export TF_VAR_vm_user_password="<password>" #Used to login into the AzureVMs
 ```  
 Run `. ~/.bashrc` to reload your profile file in the running shell.
 
@@ -30,7 +29,6 @@ Run `. ~/.bashrc` to reload your profile file in the running shell.
 - Shell Scripts
   * Master script to manage the entire deployment
   * Create the resource group, storage account, container to store the backend of terraform using Azure CLI
-  * Create a access public-private key pair using keygen and distribute to all the AzureVMs
 - Terraform
   * Creates a resource group
   * Creates a VNet
@@ -71,17 +69,17 @@ Run `. ~/.bashrc` to reload your profile file in the running shell.
   ```
   
 ## Things left
-- The need to automatically delete the resource group for the storage account, storage account and conatiner (Manual job as of now)
-- Optimize terraform code for duplicatoin. Implement looping over variables to create resources
+- The need to automatically delete the resource group for the storage account, storage account and conatiner (Manual job as of now) - DONE
+- Optimize terraform code for duplicatoin. Implement looping over variables to create resources - DONE
 - Enable scalability of the solution
   * WEB component (Apache2 + Mediawiki) can be deployed in a AzureVM scale set
   * DB component can be deployed using Azure Database for MySql PaaS
-- Generate a TLS key using the terraform code (Was not able to do this)
+- Generate a TLS key using the terraform code (Was not able to do this) - DONE
 - I have added a public IP for the DB AzureVM also so that ansible could ssh and run the playbook. I think this can be improved by following ways -
   * Create the jumphost in the same VNet and run the ansible code from there (SSH using the private IP of the DB VM)
   OR
   * Presently I have a NSG rule for allowing SSH on 22 from * on DB VM. Hardcode the my local machine's IP in the source
 - I wanted to orchestrate the entire deployment using azure pipelines (YAML based) but got `No hosted parallelism has been purchased or granted` error cause of a free teir account   so maybe create a self hosted build agent using terraform and use that to deploy the code
-- Run the ansible roles (DB and WEB) parallely 
+- Run the ansible roles (DB and WEB) parallely - DONE
 - I have currently stored the login password for the VMs as an ENV variable and used it in Terraform but would like to store these in Azure KV and fetch them when the need arises
   
