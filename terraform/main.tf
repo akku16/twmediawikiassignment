@@ -145,13 +145,10 @@ resource "azurerm_linux_virtual_machine" "mediawiki-vm" {
     name                            = "mediawikiVM-${lookup(element(var.media_wiki_components, count.index), "name")}"
     location                        = var.region
     resource_group_name             = azurerm_resource_group.mediawiki-rg.name
-    network_interface_ids           = [
-        azurerm_network_interface.mediawiki-nic[count.index].id
-    ]
+    network_interface_ids           = [azurerm_network_interface.mediawiki-nic[count.index].id]
     size                            = "Standard_DS1_v2"
     computer_name                   = "mediawikiVM${lookup(element(var.media_wiki_components, count.index), "name")}"
     admin_username                  = var.vm_user
-    # admin_password                  = var.vm_user_password
     disable_password_authentication = true
 
     admin_ssh_key {

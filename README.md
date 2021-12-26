@@ -66,10 +66,8 @@ Run `. ~/.bashrc` to reload your profile file in the running shell.
       plan    -> See the plan of terraform project
       apply   -> provision terraform resources
       storage -> Create storage account for terraform backend
-      keygen  -> Generate keys for logging inside VMs provisioned
       config  -> Run ansible project to configure mediawiki
       destroy -> Destroy all terraform resources
-      keydist -> Distrubute keys to VMs
   ```
   
 ## Things left
