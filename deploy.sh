@@ -17,10 +17,7 @@ if [[ $? != 0 ]];then
   echo "plan    -> See the plan of terraform project"
   echo "apply   -> provision terraform resources"
   echo "storage -> Create storage account for terraform backend"
-  echo "keygen  -> Generate keys for logging inside VMs provisioned"
-  echo "config  -> Run ansible project to configure mediawiki"
   echo "destroy -> Destroy all terraform resources"
-  echo "keydist -> Distrubute keys to VMs"
   exit
 fi
 
@@ -32,26 +29,9 @@ TERRAFORM_PATH="$PROJECT_ROOT/terraform"
 if [[ $operation == "deploy" ]];then
 
   # Create storage account of maintaing the backend of terraform
-  cd $SCRIPTS_PATH && ./setup_storage_account.sh && cd -
+  cd $SCRIPTS_PATH && ./setup_storage_account.sh Create && cd -
   # Provision Infrastructure
   cd $TERRAFORM_PATH && terraform init && terraform apply -auto-approve && cd -
-  # Generate public-private keys for ansible
-  cd $SCRIPTS_PATH && ./generate_keys.sh && cd -
-  echo "===> Distrubute public keys to VMs"
-  cd $SCRIPTS_PATH
-  while read vm; do
-    if [[ ! $vm == *"["* ]];then
-      ./login.expect akshar@$vm
-    fi
-  done <../ansible/mediawiki_inventory.ini
-  cd -
-  # Step 5 -> Configure using ansible
-  if [[ -z $tag ]];then
-    args=""
-  else
-    args="--tags $tag"
-  fi
-  cd $ANSIBLE_PATH && ansible-playbook -i mediawiki_inventory.ini deploy.yml $args && cd -
 
 elif [[ $operation == "init" ]];then
   echo "====> Initializing terraform project"
@@ -66,30 +46,11 @@ elif [[ $operation == "apply" ]]; then
   cd $TERRAFORM_PATH && terraform init && terraform apply && cd -
 
 elif [[ $operation == "destroy" ]];then
-  echo "====> Destroying terraform resources"
-   cd $TERRAFORM_PATH && terraform init && terraform destroy && cd -
+  echo "====> Destroying resources"
+   cd $TERRAFORM_PATH && terraform init && terraform destroy && cd - && cd $SCRIPTS_PATH && ./setup_storage_account.sh Destroy && cd -
 
 elif [[ $operation == "storage" ]];then
   cd $SCRIPTS_PATH && ./setup_storage_account.sh && cd -
-
-elif [[ $operation == "keygen" ]];then
-  cd $SCRIPTS_PATH && ./generate_keys.sh && cd -
-
-elif [[ $operation == "keydist" ]];then
-  echo "Can only be done once the ansible inventory file is generated. Do you want to continue?Y/N"
-  read response
-  if [[ $response == "Y" ]];then
-    cd $SCRIPTS_PATH
-    while read vm; do
-      if [[ ! $vm == *"["* ]];then
-        ./login.expect akshar@$vm
-      fi
-    done <../ansible/mediawiki_inventory.ini
-    cd -
-  else
-    exit
-  fi
-
 elif [[ $operation == "config" ]];then
   echo "====> Running Ansible playbooks to deploy mediawiki components"
   if [[ -z $tag ]];then

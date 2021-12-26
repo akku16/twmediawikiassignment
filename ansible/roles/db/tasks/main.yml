@@ -31,6 +31,24 @@
 - name: restart msql service
   systemd: name=mysql state=restarted
 
+# - name: Set azure creds
+#   set_fact:
+#     TENANT_ID: '{{ lookup('env', 'TF_VAR_TENANT_ID') }}'
+#     CLIENT_ID: '{{ lookup('env', 'TF_VAR_CLIENT_ID') }}'
+#     CLIENT_SECRET: '{{ lookup('env', 'TF_VAR_CLIENT_SECRET') }}'
+
+# - name: Get Key Vault by name
+#   azure_rm_keyvault_info:
+#     resource_group: ansible-kv-test-rg
+#     name: "{{ vault_name }}"
+#   register: keyvault
+#   vars:
+#     tenant_id: <tenantId>
+#     vault_name: <vaultName>
+#     secret_name: adminPassword
+#     client_id: <servicePrincipalApplicationId>
+#     client_secret: <servicePrincipalSecret>
+
 - name: Create database user
   shell: |
     sudo mysql -u root -e "CREATE USER {{ USER }} IDENTIFIED BY {{ PASSWORD }}"
