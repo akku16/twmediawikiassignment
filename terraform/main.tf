@@ -149,6 +149,7 @@ resource "azurerm_linux_virtual_machine" "mediawiki-vm" {
     size                            = "Standard_DS1_v2"
     computer_name                   = "mediawikiVM${lookup(element(var.media_wiki_components, count.index), "name")}"
     admin_username                  = var.vm_user
+    #admin_password                  = var.vm_user_password
     disable_password_authentication = true
 
     admin_ssh_key {
@@ -199,6 +200,6 @@ resource "null_resource" "ansible-command" {
     
     count = "${length(var.media_wiki_components)}"
     provisioner "local-exec" {
-        command = "cd ../ansible && ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i mediawiki_inventory.ini deploy.yml --tags ${lookup(element(var.media_wiki_components, count.index), "name")}"
+        command = "cd ../ansible && ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i mediawiki_inventory.ini deploy.yml -e rg_name=${azurerm_resource_group.mediawiki-rg.name} -e kv_name=${random_string.kv-name.result} --tags ${lookup(element(var.media_wiki_components, count.index), "name")}"
   }
 }

@@ -18,6 +18,10 @@ variable "vm_user" {
   description = "Picked from ENV variables. Define then as TF_VAR_vm_user"
 }
 
+variable "vm_user_password" {
+  type = string 
+}
+
 variable "SUBSCRIPTION_ID" {
   type = string
 }
