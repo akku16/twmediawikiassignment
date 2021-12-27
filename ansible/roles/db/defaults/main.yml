@@ -10,4 +10,5 @@ packages_db:
 
 mysql_config_file: "/etc/mysql/mysql.conf.d/mysqld.cnf"
 db_user: "'tw_user'"
+db_user_password: "'tw_password'"
 db_name: "tw_database"
