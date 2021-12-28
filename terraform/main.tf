@@ -175,6 +175,7 @@ resource "azurerm_linux_virtual_machine" "mediawiki-vm" {
     }
 }
 
+# Ansible inventory file creation
 resource "local_file" "mediawiki-hosts-cfg" {
   content   = templatefile("${path.module}/templates/hosts.tpl",
     {
@@ -185,12 +186,14 @@ resource "local_file" "mediawiki-hosts-cfg" {
   filename = "../ansible/mediawiki_inventory.ini"
 }
 
+# Private key file creation
 resource "local_file" "private_key" {
   content         = tls_private_key.mediawiki-ssh.private_key_pem
   filename        = "../files/id_rsa"
   file_permission = "0600"
 }
 
+# Running ansible playbook parallely
 resource "null_resource" "ansible-command" {
     depends_on = [
                     azurerm_linux_virtual_machine.mediawiki-vm,
@@ -200,6 +203,7 @@ resource "null_resource" "ansible-command" {
     
     count = "${length(var.media_wiki_components)}"
     provisioner "local-exec" {
-        command = "cd ../ansible && ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i mediawiki_inventory.ini deploy.yml -e rg_name=${azurerm_resource_group.mediawiki-rg.name} -e kv_name=${random_string.kv-name.result} --tags ${lookup(element(var.media_wiki_components, count.index), "name")}"
+        #command = "cd ../ansible && ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i mediawiki_inventory.ini deploy.yml -e rg_name=${azurerm_resource_group.mediawiki-rg.name} -e kv_name=${random_string.kv-name.result} --tags ${lookup(element(var.media_wiki_components, count.index), "name")}"
+        command = "cd ../ansible && ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i mediawiki_inventory.ini deploy.yml --tags ${lookup(element(var.media_wiki_components, count.index), "name")}"
   }
 }

@@ -6,18 +6,19 @@ if [[ -z $operation ]];then
   echo "======> Please specify an operation"
   exit
 fi
-list_of_operations="deploy destroy init plan storage keygen apply config keydist"
+list_of_operations="deploy destroy init plan storage apply ansible"
 echo $list_of_operations | grep -w -q $operation
 if [[ $? != 0 ]];then
   echo "XXXXXXXXXX Incorrect operation"
   echo "Valid operation are - "
   echo "==============================================================="
-  echo "deploy  -> Deploy whole project"
-  echo "init    -> Initialize terraform project"
-  echo "plan    -> See the plan of terraform project"
-  echo "apply   -> provision terraform resources"
-  echo "storage -> Create storage account for terraform backend"
-  echo "destroy -> Destroy all terraform resources"
+  echo "deploy      -> Deploy whole project"
+  echo "init        -> Initialize terraform project"
+  echo "plan        -> See the plan of terraform project"
+  echo "apply       -> provision terraform resources"
+  echo "storage     -> Create storage account for terraform backend"
+  echo "destroy     -> Destroy all terraform resources"
+  echo "ansible      -> Run Ansible playbooks based on tags"
   exit
 fi
 
@@ -51,7 +52,7 @@ elif [[ $operation == "destroy" ]];then
 
 elif [[ $operation == "storage" ]];then
   cd $SCRIPTS_PATH && ./setup_storage_account.sh && cd -
-elif [[ $operation == "config" ]];then
+elif [[ $operation == "ansible" ]];then
   echo "====> Running Ansible playbooks to deploy mediawiki components"
   if [[ -z $tag ]];then
     args=""

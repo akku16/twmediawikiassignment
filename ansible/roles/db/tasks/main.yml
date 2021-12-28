@@ -9,7 +9,7 @@
     state: present
   loop: "{{ packages_db }}"
 
-- name: Make sure pymysql is present
+- name: Verify if pymsql is present
   pip:
     name: pymysql
     state: present
@@ -34,20 +34,20 @@
 
 - name: Create database user
   shell: |
-    sudo mysql -u root -e "CREATE USER {{ USER }} IDENTIFIED BY {{ PASSWORD }}"
+    mysql -u root -e "CREATE USER {{ USER }} IDENTIFIED BY {{ PASSWORD }}"
   vars:
     USER: "{{ db_user }}"
-    PASSWORD: "{{ db_user_passowrd }}"
+    PASSWORD: "{{ db_user_password }}"
 
 - name: Create database
   shell: |
-    sudo mysql -u root -e "CREATE DATABASE {{ DB_NAME }}"
+    mysql -u root -e "CREATE DATABASE {{ DB_NAME }}"
   vars:
     DB_NAME: "{{ db_name }}"
 
 - name: Create new user for new database
   shell: |
-    sudo mysql -u root -e "GRANT ALL ON {{ DB_NAME }}.* TO {{ USER }}"
+    mysql -u root -e "GRANT ALL ON {{ DB_NAME }}.* TO {{ USER }}"
   vars:
     DB_NAME: "{{ db_name }}"
     USER: "{{ db_user }}"
